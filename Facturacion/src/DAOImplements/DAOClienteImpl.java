@@ -1,10 +1,17 @@
 package DAOImplements;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import DAO.DAOCliente;
 import Facturacion.Cliente;
@@ -21,7 +28,7 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
 				"     id INT NOT NULL," + 
 				"     nombre VARCHAR(500) NOT NULL," + 
-				"     mail varchar(150)," + 
+				"     mail VARCHAR(150)," + 
 				"     PRIMARY KEY (id)" + 
 				");";
 		this.conn.prepareStatement(table).executeUpdate();
@@ -73,9 +80,18 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 	}
 
 	@Override
-	public void cargarDesdeCsv() throws SQLException {
-		//TBC
-		System.out.println("TBC CARGAR DESDE CSV");
+	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException {
+		CSVParser parser;
+		Cliente c;
+		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("tp1-archivos\\clientes.csv"));
+		for(CSVRecord row: parser) {
+			c=new Cliente(Integer.parseInt(row.get("idCliente")),row.get("nombre"),row.get("email"));
+			System.out.println(row.get("idCliente"));
+			System.out.println(row.get("nombre"));
+			System.out.println(row.get("email"));
+			this.agregarCliente(c);
+		}
 	}
+
 
 }

@@ -1,10 +1,17 @@
 package DAOImplements;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import DAO.DAOProducto;
 import Facturacion.Conexion;
@@ -73,25 +80,17 @@ public class DAOProductoImpl extends Conexion implements DAOProducto {
 	}
 
 	@Override
-	public void cargarDesdeCsv() throws SQLException {
-		/*CSVParser parser;
+	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException {
+		CSVParser parser;
 		Producto p;
-		try {
-			parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("C://Users/Grido/Desktop/Facultad/arqui web/csvs/productos.csv"));
-			for(CSVRecord row: parser) {
-				 p=new Producto(Integer.parseInt(row.get("idProducto")),row.get("nombre"),Float.parseFloat(row.get("valor")));
-				System.out.println(row.get("idProducto"));
-				System.out.println(row.get("nombre"));
-				System.out.println(row.get("valor"));
-				this.agregarProducto(p);
-				
-				}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("tp1-archivos\\productos.csv"));
+		for(CSVRecord row: parser) {
+			p=new Producto(Integer.parseInt(row.get("idProducto")),row.get("nombre"),Float.parseFloat(row.get("valor")));
+			System.out.println(row.get("idProducto"));
+			System.out.println(row.get("nombre"));
+			System.out.println(row.get("valor"));
+			this.agregarProducto(p);
+		}	
 	}
-
 
 }
