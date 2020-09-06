@@ -93,23 +93,23 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 	
 	/*** QUERIES ***/
 	public void obtenerClientesFavoritos() throws SQLException {
-		String PRODUCTO_MEJOR_RECAUDACION = "SELECT nombre FROM (" +
-			"		SELECT c.id, c.nombre, " +
+		String PRODUCTO_MEJOR_RECAUDACION = "SELECT c.id, c.nombre, " +
 			"		COALESCE(SUM(fp.cantidad * p.valor),0) AS valorFinal " +
-			"		FROM cliente_prueba c " +
-			"		INNER JOIN factura_prueba f " +
+			"		FROM cliente_test c " +
+			"		INNER JOIN factura_test f " +
 			"		ON f.idCliente = c.id " +
-			"		INNER JOIN factura_producto_prueba fp " +
+			"		INNER JOIN factura_producto_test fp " +
 			"		ON f.id = fp.idFactura " +
-			"		INNER JOIN producto_prueba p " +
+			"		INNER JOIN producto_test p " +
 			"		ON fp.idProducto = p.id " +
 			"		GROUP BY c.id " +
-			"		order by valorFinal desc ) NT;";
+			"		order by valorFinal desc;";
 	
 		PreparedStatement ps =this.conn.prepareStatement(PRODUCTO_MEJOR_RECAUDACION);
 		ResultSet rs = ps.executeQuery();
+		System.out.println("*** CLIENTES ORDENADOS POR VALOR FACTURADO TOTAL ***");
 		while (rs.next()) {
-			System.out.println(rs.getString("nombre"));
+			System.out.println("el cliente: " + rs.getString("nombre") + ", realizo compras por un total de: " + rs.getFloat("valorFinal"));
 		}
 		rs.close();
 	}

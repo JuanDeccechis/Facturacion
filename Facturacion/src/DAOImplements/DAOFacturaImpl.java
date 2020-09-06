@@ -152,10 +152,9 @@ private String delimitador = "_";
 	
 		PreparedStatement ps =this.conn.prepareStatement(PRODUCTO_MEJOR_RECAUDACION);
 		ResultSet rs = ps.executeQuery();
+		System.out.println("*** PRODUCTO DE MAYOR RECAUDACION ***");
 		while (rs.next()) {
-			System.out.println(rs.getInt("idproducto"));
-			System.out.println(rs.getString("nombre"));
-			System.out.println(rs.getInt("totalFacturado"));
+			System.out.println("El producto: " + rs.getString("nombre") + " recaudo: $" + rs.getInt("totalFacturado"));
 		}
 		rs.close();
 	}
