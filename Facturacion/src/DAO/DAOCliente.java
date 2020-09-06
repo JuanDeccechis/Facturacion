@@ -14,4 +14,7 @@ public interface DAOCliente {
 	public List<Cliente> listarClientes() throws SQLException;
 	public Cliente obtenerCliente(int id) throws SQLException;
 	public void cargarDesdeCsv()throws SQLException, FileNotFoundException, IOException;
+
+	/** QUERIES **/
+	public void obtenerClientesFavoritos() throws SQLException;
 }

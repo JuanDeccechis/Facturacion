@@ -90,6 +90,29 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 			this.agregarCliente(c);
 		}
 	}
+	
+	/*** QUERIES ***/
+	public void obtenerClientesFavoritos() throws SQLException {
+		String PRODUCTO_MEJOR_RECAUDACION = "SELECT nombre FROM (" +
+			"		SELECT c.id, c.nombre, " +
+			"		COALESCE(SUM(fp.cantidad * p.valor),0) AS valorFinal " +
+			"		FROM cliente_prueba c " +
+			"		INNER JOIN factura_prueba f " +
+			"		ON f.idCliente = c.id " +
+			"		INNER JOIN factura_producto_prueba fp " +
+			"		ON f.id = fp.idFactura " +
+			"		INNER JOIN producto_prueba p " +
+			"		ON fp.idProducto = p.id " +
+			"		GROUP BY c.id " +
+			"		order by valorFinal desc ) NT;";
+	
+		PreparedStatement ps =this.conn.prepareStatement(PRODUCTO_MEJOR_RECAUDACION);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			System.out.println(rs.getString("nombre"));
+		}
+		rs.close();
+	}
 
 
 }

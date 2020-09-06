@@ -128,7 +128,6 @@ private String delimitador = "_";
 		}
 	}
 	
-	/*** QUERIES ***/
 	public void obtenerFacturaProductos() throws SQLException {
 		String select = "SELECT * FROM factura_producto" + delimitador + sufijo;
 		PreparedStatement ps = this.conn.prepareStatement(select);
@@ -141,8 +140,10 @@ private String delimitador = "_";
 		rs.close();
 	}
 	
+	/*** QUERIES ***/
 	public void obtenerProductoMejorRecaudacion() throws SQLException {
-		String PRODUCTO_MEJOR_RECAUDACION ="SELECT fp.idproducto, p.nombre, (SUM(fp.cantidad * p.valor)) AS totalFacturado " + 
+		String PRODUCTO_MEJOR_RECAUDACION ="SELECT fp.idproducto, p.nombre, " +
+			"		(SUM(fp.cantidad * p.valor)) AS totalFacturado " + 
 			"		FROM factura_producto" + delimitador + sufijo +  " fp " +
 			"		INNER JOIN producto" + delimitador + sufijo +  " p " + 
 			"		ON fp.idproducto = p.id" + 

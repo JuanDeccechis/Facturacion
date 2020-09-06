@@ -27,15 +27,14 @@ public class Facturacion {
 		daop.crearTabla("producto_prueba");
 		daof.crearTabla("factura_prueba");
 		
-		daoc.cargarDesdeCsv();
+	/*	daoc.cargarDesdeCsv();
 		daop.cargarDesdeCsv();
 		daof.cargarDesdeCsv();
-
+*/
 
 //		daof.agregarFacturaProducto(1, 1, 4);
 		daof.obtenerProductoMejorRecaudacion();
-		daof.agregarFacturaProducto(1, 2, 5);
-		daof.obtenerProductoMejorRecaudacion();
+		daoc.obtenerClientesFavoritos();
 		
 		/*** TEST UNITARIOS
 		 * CLIENTE
@@ -79,6 +78,14 @@ public class Facturacion {
 		 * daof.obtenerProductoMejorRecaudacion();
 		 * daof.agregarFacturaProducto(1, 2, 5);
 		 * daof.obtenerProductoMejorRecaudacion();
+		 * 
+		 * total de facturacion
+		 * select SUM(fp.cantidad * p.valor) AS CANTIDAD from factura_producto_prueba fp inner join producto_prueba p on fp.idproducto = p.id group by fp.idfactura;
+		 * facturas a un cliente
+		 * select * from factura_prueba group by idCliente
+		 * cantidad de productos que llevó un cliente
+		 * select SUM(fp.cantidad) as productosPorCliente from factura_producto_prueba fp inner join factura_prueba f on fp.idfactura = f.id group by f.idCliente
+		 * 
 		 * ***/
 	}
 }
