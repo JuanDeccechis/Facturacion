@@ -9,7 +9,7 @@ import Facturacion.Producto;
 
 public interface DAOProducto {
 	
-	public void crearTabla(String nombreTabla) throws SQLException;
+	public void crearTabla() throws SQLException;
 	public void agregarProducto(Producto pr) throws SQLException;
 	public List<Producto> listarProductos() throws SQLException;
 	public Producto obtenerProducto(int id) throws SQLException;

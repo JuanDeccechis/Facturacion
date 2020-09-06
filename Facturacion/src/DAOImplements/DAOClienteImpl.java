@@ -19,14 +19,12 @@ import Facturacion.Conexion;
 
 public class DAOClienteImpl  extends Conexion implements DAOCliente {
 
-	private String tabla;
 	private String path = "tp1-archivos\\";
 	
 	@Override
-	public void crearTabla(String nombreTabla) throws SQLException {
-		this.tabla = nombreTabla;
+	public void crearTabla() throws SQLException {
 		this.conectar();
-		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
+		String table="CREATE TABLE IF NOT EXISTS cliente (" + 
 				"     id INT NOT NULL," + 
 				"     nombre VARCHAR(500) NOT NULL," + 
 				"     mail VARCHAR(150)," + 
@@ -38,7 +36,7 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 
 	@Override
 	public void agregarCliente(Cliente c) throws SQLException {
-		String insert= "INSERT INTO " + tabla +"(id,nombre,mail) VALUES (?,?,?)";
+		String insert= "INSERT INTO cliente (id,nombre,mail) VALUES (?,?,?)";
 		PreparedStatement ps = this.conn.prepareStatement(insert);
 		ps.setInt(1, c.getId());
 		ps.setString(2, c.getNombre());
@@ -51,7 +49,7 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 
 	@Override
 	public List<Cliente> listarClientes() throws SQLException {
-		String select = "SELECT * FROM " + tabla;
+		String select = "SELECT * FROM cliente";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ResultSet rs=ps.executeQuery();
 		List<Cliente> result = new ArrayList<Cliente>();
@@ -68,7 +66,7 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 
 	@Override
 	public Cliente obtenerCliente(int id) throws SQLException {
-		String select = "SELECT * FROM " + tabla + " WHERE id = ?";
+		String select = "SELECT * FROM cliente WHERE id = ?";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
@@ -95,12 +93,12 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 	public void obtenerClientesFavoritos() throws SQLException {
 		String PRODUCTO_MEJOR_RECAUDACION = "SELECT c.id, c.nombre, " +
 			"		COALESCE(SUM(fp.cantidad * p.valor),0) AS valorFinal " +
-			"		FROM cliente_test c " +
-			"		INNER JOIN factura_test f " +
+			"		FROM cliente c " +
+			"		INNER JOIN factura f " +
 			"		ON f.idCliente = c.id " +
-			"		INNER JOIN factura_producto_test fp " +
+			"		INNER JOIN factura_producto fp " +
 			"		ON f.id = fp.idFactura " +
-			"		INNER JOIN producto_test p " +
+			"		INNER JOIN producto p " +
 			"		ON fp.idProducto = p.id " +
 			"		GROUP BY c.id " +
 			"		order by valorFinal desc;";

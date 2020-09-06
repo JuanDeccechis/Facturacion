@@ -19,9 +19,9 @@ public class Facturacion {
 		DAOFactura daof= new DAOFacturaImpl();
 		
 		//creacion de tablas
-		daoc.crearTabla("cliente_test");
-		daop.crearTabla("producto_test");
-		daof.crearTabla("factura_test");
+		daoc.crearTabla();
+		daop.crearTabla();
+		daof.crearTabla();
 		
 		daoc.cargarDesdeCsv();
 		daop.cargarDesdeCsv();

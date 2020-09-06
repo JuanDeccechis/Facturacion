@@ -19,14 +19,12 @@ import Facturacion.Producto;
 
 public class DAOProductoImpl extends Conexion implements DAOProducto {
 
-	private String tabla;
 	private String path = "tp1-archivos\\";
 
 	@Override
-	public void crearTabla(String nombreTabla) throws SQLException {
-		this.tabla = nombreTabla;
+	public void crearTabla() throws SQLException {
 		this.conectar();
-		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
+		String table="CREATE TABLE IF NOT EXISTS producto (" + 
 				"     id INT NOT NULL," + 
 				"     nombre VARCHAR(45) NOT NULL," + 
 				"     valor FLOAT NOT NULL," + 
@@ -39,7 +37,7 @@ public class DAOProductoImpl extends Conexion implements DAOProducto {
 	
 	@Override
 	public void agregarProducto(Producto p) throws SQLException {
-		String insert= "INSERT INTO "+ tabla + " (id,nombre,valor) VALUES (?,?,?)";
+		String insert= "INSERT INTO producto (id,nombre,valor) VALUES (?,?,?)";
 		PreparedStatement ps = this.conn.prepareStatement(insert);
 		ps.setInt(1, p.getId());
 		ps.setString(2, p.getNombre());
@@ -51,7 +49,7 @@ public class DAOProductoImpl extends Conexion implements DAOProducto {
 
 	@Override
 	public List<Producto> listarProductos() throws SQLException {
-		String select = "SELECT * FROM " + tabla;
+		String select = "SELECT * FROM producto";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ResultSet rs=ps.executeQuery();
 		List<Producto> result = new ArrayList<Producto>();
@@ -68,7 +66,7 @@ public class DAOProductoImpl extends Conexion implements DAOProducto {
 
 	@Override
 	public Producto obtenerProducto(int id) throws SQLException {
-		String select = "SELECT * FROM " + tabla + " WHERE id = ?";
+		String select = "SELECT * FROM producto WHERE id = ?";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();

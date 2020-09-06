@@ -19,38 +19,27 @@ import Facturacion.Factura;
 
 public class DAOFacturaImpl extends Conexion  implements DAOFactura{
 
-private String tabla = "";
-private String sufijo = "";
 private String path = "tp1-archivos\\";
-private String delimitador = "_";
 	
 	@Override
-	public void crearTabla(String nombreTabla) throws SQLException {
-		this.tabla = nombreTabla;
-		String[] parts = nombreTabla.split(delimitador);
-		if (parts.length > 1) {
-			sufijo = parts[parts.length-1];	
-		}
-		else {
-			delimitador = "";
-		}
+	public void crearTabla() throws SQLException {
 		this.conectar();
-		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
+		String table="CREATE TABLE IF NOT EXISTS factura(" + 
 				"     id INT NOT NULL," + 
 				"     idcliente int NOT NULL," + 
 				"     PRIMARY KEY (id)," + 
-				"	  FOREIGN KEY (idcliente) REFERENCES cliente" + delimitador + sufijo + "(id)"+
+				"	  FOREIGN KEY (idcliente) REFERENCES cliente (id)"+
 				");";
 		
-		String RELACION_FACTURA_PRODUCTO ="CREATE TABLE IF NOT EXISTS factura_producto" + delimitador + sufijo + "(" + 
+		String RELACION_FACTURA_PRODUCTO ="CREATE TABLE IF NOT EXISTS factura_producto(" + 
 				"	  idfactura INT NOT NULL," + 
 				"	  idproducto INT NOT NULL," + 
 				"	  cantidad INT NOT NULL," + 
 				"	  PRIMARY KEY (idfactura, idproducto)," + 
 				"	  FOREIGN KEY (idfactura)" + 
-				"	  REFERENCES factura" + delimitador + sufijo + "(id),"+ 
+				"	  REFERENCES factura (id),"+ 
 				"	  FOREIGN KEY (idproducto)" + 
-				"	  REFERENCES producto" + delimitador + sufijo + "(id)" +
+				"	  REFERENCES producto (id)" +
 				");";
 		
 		this.conn.prepareStatement(table).executeUpdate();
@@ -61,7 +50,7 @@ private String delimitador = "_";
 
 	@Override
 	public void agregarFactura(Factura f) throws SQLException {
-		String insert= "INSERT INTO " + tabla +"(id,idCliente) VALUES (?,?)";
+		String insert= "INSERT INTO factura (id,idCliente) VALUES (?,?)";
 		PreparedStatement ps = this.conn.prepareStatement(insert);
 		ps.setInt(1, f.getId());
 		ps.setInt(2, f.getCliente());
@@ -71,7 +60,7 @@ private String delimitador = "_";
 	}
 
 	public void agregarFacturaProducto(int idFactura,int idProducto, int cantidad) throws SQLException {
-		String insert = "INSERT INTO factura_producto" + delimitador + sufijo + "(idFactura, idProducto, cantidad) VALUES (?,?,?)";
+		String insert = "INSERT INTO factura_producto (idFactura, idProducto, cantidad) VALUES (?,?,?)";
 		PreparedStatement ps = this.conn.prepareStatement(insert);
 		ps.setInt(1, idFactura);
 		ps.setInt(2, idProducto);
@@ -83,7 +72,7 @@ private String delimitador = "_";
 	
 	@Override
 	public List<Factura> listarFacturas() throws SQLException {
-		String select = "SELECT * FROM " + tabla;
+		String select = "SELECT * FROM factura";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ResultSet rs=ps.executeQuery();
 		List<Factura> result = new ArrayList<Factura>();
@@ -99,7 +88,7 @@ private String delimitador = "_";
 
 	@Override
 	public Factura obtenerFactura(int id) throws SQLException {
-		String select = "SELECT * FROM " + tabla + " WHERE id = ?";
+		String select = "SELECT * FROM factura WHERE id = ?";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
@@ -129,7 +118,7 @@ private String delimitador = "_";
 	}
 	
 	public void obtenerFacturaProductos() throws SQLException {
-		String select = "SELECT * FROM factura_producto" + delimitador + sufijo;
+		String select = "SELECT * FROM factura_producto";
 		PreparedStatement ps = this.conn.prepareStatement(select);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
@@ -144,8 +133,8 @@ private String delimitador = "_";
 	public void obtenerProductoMejorRecaudacion() throws SQLException {
 		String PRODUCTO_MEJOR_RECAUDACION ="SELECT fp.idproducto, p.nombre, " +
 			"		(SUM(fp.cantidad * p.valor)) AS totalFacturado " + 
-			"		FROM factura_producto" + delimitador + sufijo +  " fp " +
-			"		INNER JOIN producto" + delimitador + sufijo +  " p " + 
+			"		FROM factura_producto fp " +
+			"		INNER JOIN producto p " + 
 			"		ON fp.idproducto = p.id" + 
 			"		GROUP BY fp.idproducto " + 
 			"		ORDER BY totalFacturado DESC LIMIT 1;";

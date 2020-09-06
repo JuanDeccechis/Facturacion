@@ -10,7 +10,7 @@ import Facturacion.Factura;
 
 public interface DAOFactura {
 
-	public void crearTabla(String nombreTabla) throws SQLException;
+	public void crearTabla() throws SQLException;
 	public void agregarFactura(Factura f) throws SQLException;
 	public List<Factura> listarFacturas() throws SQLException;
 	public Factura obtenerFactura(int id) throws SQLException;
