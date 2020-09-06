@@ -20,6 +20,7 @@ import Facturacion.Conexion;
 public class DAOClienteImpl  extends Conexion implements DAOCliente {
 
 	private String tabla;
+	private String path = "tp1-archivos\\";
 	
 	@Override
 	public void crearTabla(String nombreTabla) throws SQLException {
@@ -83,12 +84,9 @@ public class DAOClienteImpl  extends Conexion implements DAOCliente {
 	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException {
 		CSVParser parser;
 		Cliente c;
-		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("tp1-archivos\\clientes.csv"));
+		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(path + "clientes.csv"));
 		for(CSVRecord row: parser) {
 			c=new Cliente(Integer.parseInt(row.get("idCliente")),row.get("nombre"),row.get("email"));
-			System.out.println(row.get("idCliente"));
-			System.out.println(row.get("nombre"));
-			System.out.println(row.get("email"));
 			this.agregarCliente(c);
 		}
 	}

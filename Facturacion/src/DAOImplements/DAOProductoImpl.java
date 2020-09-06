@@ -20,6 +20,7 @@ import Facturacion.Producto;
 public class DAOProductoImpl extends Conexion implements DAOProducto {
 
 	private String tabla;
+	private String path = "tp1-archivos\\";
 
 	@Override
 	public void crearTabla(String nombreTabla) throws SQLException {
@@ -83,12 +84,9 @@ public class DAOProductoImpl extends Conexion implements DAOProducto {
 	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException {
 		CSVParser parser;
 		Producto p;
-		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("tp1-archivos\\productos.csv"));
+		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(path + "productos.csv"));
 		for(CSVRecord row: parser) {
 			p=new Producto(Integer.parseInt(row.get("idProducto")),row.get("nombre"),Float.parseFloat(row.get("valor")));
-			System.out.println(row.get("idProducto"));
-			System.out.println(row.get("nombre"));
-			System.out.println(row.get("valor"));
 			this.agregarProducto(p);
 		}	
 	}

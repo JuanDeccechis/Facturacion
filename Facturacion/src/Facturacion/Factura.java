@@ -1,5 +1,7 @@
 package Facturacion;
 
+import java.sql.SQLException;
+
 public class Factura {
 	private int id;
 	private int idCliente;
@@ -28,6 +30,10 @@ public class Factura {
 	
 	public void setId(int factura) {
 		this.id= factura;
+	}
+
+	public void agregarFacturaProducto(int idFactura,int idProducto, int cantidad) throws SQLException {
+	
 	}
 
 	@Override

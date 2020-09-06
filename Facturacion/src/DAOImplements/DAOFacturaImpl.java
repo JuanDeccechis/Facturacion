@@ -14,40 +14,46 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import DAO.DAOFactura;
-import Facturacion.Cliente;
 import Facturacion.Conexion;
 import Facturacion.Factura;
 
 public class DAOFacturaImpl extends Conexion  implements DAOFactura{
 
-private String tabla;
+private String tabla = "";
+private String sufijo = "";
+private String path = "tp1-archivos\\";
+private final static String delimitador = "_";
 	
 	@Override
 	public void crearTabla(String nombreTabla) throws SQLException {
 		this.tabla = nombreTabla;
+		String[] parts = nombreTabla.split(delimitador);
+		if (parts.length > 1) {
+			sufijo = parts[parts.length-1];	
+		}
 		this.conectar();
 		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
 				"     id INT NOT NULL," + 
 				"     idcliente int NOT NULL," + 
 				"     PRIMARY KEY (id)," + 
-				"	  FOREIGN KEY (idcliente) REFERENCES clienteprueba(id)"+
+				"	  FOREIGN KEY (idcliente) REFERENCES cliente" + delimitador + sufijo + "(id)"+
 				");";
 		
-		String RELACION_FACTURA_PRODUCTO ="CREATE TABLE IF NOT EXISTS " + tabla +"_producto (" + 
+		String RELACION_FACTURA_PRODUCTO ="CREATE TABLE IF NOT EXISTS factura_producto" + delimitador + sufijo + "(" + 
 				"	  idfactura INT NOT NULL," + 
 				"	  idproducto INT NOT NULL," + 
 				"	  cantidad INT NOT NULL," + 
 				"	  PRIMARY KEY (idfactura, idproducto)," + 
 				"	  FOREIGN KEY (idfactura)" + 
-				"	  REFERENCES factura (id),"+ 
+				"	  REFERENCES factura" + delimitador + sufijo + "(id),"+ 
 				"	  FOREIGN KEY (idproducto)" + 
-				"	  REFERENCES producto (id)" +
+				"	  REFERENCES producto" + delimitador + sufijo + "(id)" +
 				");";
 		
 		this.conn.prepareStatement(table).executeUpdate();
 		this.conn.commit();
-		//this.conn.prepareStatement(RELACION_FACTURA_PRODUCTO).executeUpdate();
-		//this.conn.commit();
+		this.conn.prepareStatement(RELACION_FACTURA_PRODUCTO).executeUpdate();
+		this.conn.commit();
 	}
 
 	@Override
@@ -61,12 +67,12 @@ private String tabla;
 		this.conn.commit();
 	}
 
-	public void insertarFacturaProducto(int idFactura,int idProducto, int cantidad) throws SQLException {
-		String insert = "INSERT INTO " + tabla +"_producto (idFactura,idProducto, cantidad) VALUES (?,?,?)";
+	public void agregarFacturaProducto(int idFactura,int idProducto, int cantidad) throws SQLException {
+		String insert = "INSERT INTO factura_producto" + delimitador + sufijo + "(idFactura, idProducto, cantidad) VALUES (?,?,?)";
 		PreparedStatement ps = this.conn.prepareStatement(insert);
 		ps.setInt(1, idFactura);
 		ps.setInt(2, idProducto);
-		ps.setInt(2, cantidad);
+		ps.setInt(3, cantidad);
 		ps.executeUpdate();
 		ps.close();
 		this.conn.commit();
@@ -105,15 +111,17 @@ private String tabla;
 	@Override
 	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException {
 		CSVParser parser;
-		Factura f;
-		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader("tp1-archivos\\facturas.csv"));
+		Factura f = null;
+		parser = CSVFormat.DEFAULT.withHeader().parse(new FileReader(path+"facturas.csv"));
 		for(CSVRecord row: parser) {
 			f=new Factura(Integer.parseInt(row.get("idFactura")),Integer.parseInt(row.get("idCliente")));
-			System.out.println(row.get("idFactura"));
-			System.out.println(row.get("idCliente"));
-			this.agregarFactura(f);
-			
+			this.agregarFactura(f);	
 		}
+		CSVParser parserRelacion;
 		
+		parserRelacion = CSVFormat.DEFAULT.withHeader().parse(new FileReader(path + "facturas-productos.csv"));
+		for(CSVRecord row: parserRelacion) {
+			this.agregarFacturaProducto(Integer.parseInt(row.get("idFactura")), Integer.parseInt(row.get("idProducto")), Integer.parseInt(row.get("cantidad")));;	
+		}
 	}
 }
