@@ -22,7 +22,7 @@ public class DAOFacturaImpl extends Conexion  implements DAOFactura{
 private String tabla = "";
 private String sufijo = "";
 private String path = "tp1-archivos\\";
-private final static String delimitador = "_";
+private String delimitador = "_";
 	
 	@Override
 	public void crearTabla(String nombreTabla) throws SQLException {
@@ -30,6 +30,9 @@ private final static String delimitador = "_";
 		String[] parts = nombreTabla.split(delimitador);
 		if (parts.length > 1) {
 			sufijo = parts[parts.length-1];	
+		}
+		else {
+			delimitador = "";
 		}
 		this.conectar();
 		String table="CREATE TABLE IF NOT EXISTS "+ tabla + "(" + 
