@@ -13,7 +13,7 @@ import DAOImplements.DAOFacturaImpl;
 import DAOImplements.DAOProductoImpl;
 
 public class Facturacion {
-
+	
 	public static void main(String[] args) throws SQLException, FileNotFoundException, IOException {
 		Cliente c = new Cliente(1, "Belen", "belenenemar@gmail.com");
 		Producto p = new Producto(1, "cubierto", (float) 12.5);
@@ -30,25 +30,19 @@ public class Facturacion {
 		daoc.cargarDesdeCsv();
 		daop.cargarDesdeCsv();
 		daof.cargarDesdeCsv();
-		
-		
-		//daoc.agregarCliente(c);
-		//daop.agregarProducto(p);
-		//daof.agregarFactura(f);
 
-		List<Factura> facturas= daof.listarFacturas();
-		facturas.forEach(System.out::println);
-		System.out.println("primer cliente:");
-		System.out.println(daoc.obtenerCliente(1));
-		
-	
+
+//		daof.agregarFacturaProducto(1, 1, 4);
+		daof.obtenerProductoMejorRecaudacion();
+		daof.agregarFacturaProducto(1, 2, 5);
+		daof.obtenerProductoMejorRecaudacion();
 		
 		/*** TEST UNITARIOS
 		 * CLIENTE
 		 * Cliente c = new Cliente(1, "Belen", "belenenemar@gmail.com");
 		 * DAOCliente daoc = new DAOClienteImpl();
 		 * daoc.crearTabla("clienteTest");
-		 * daoc.agregarCliente(c);
+		 * daoc.agregarCliente(c); // para csv: daoc.cargarDesdeCsv();
 		 * List<Cliente> clientes = daoc.listarClientes();
 		 * clientes.forEach(System.out::println);
 		 * 
@@ -56,7 +50,7 @@ public class Facturacion {
 		 * Producto p = new Producto(1, "cubierto", (float) 12.5);
 		 * DAOProducto daop= new DAOProductoImpl();
 		 * daop.crearTabla("productoTest");
-		 * daop.agregarProducto(p);
+		 * daop.agregarProducto(p);  // para csv: daop.cargarDesdeCsv();
 		 * List<Producto> productos= daop.listarProductos();
 		 * productos.forEach(System.out::println);
 		 * 
@@ -64,9 +58,27 @@ public class Facturacion {
 		 * Factura f = new Factura(1, 1);
 		 * DAOFactura daof= new DAOFacturaImpl();
 		 * daof.crearTabla("facturaTest");
-		 * daof.agregarFactura(f);
+		 * daof.agregarFactura(f);  // para csv: daof.cargarDesdeCsv();
 		 * List<Factura> facturas= daof.listarFacturas();
 		 * facturas.forEach(System.out::println);
+		 * 		 
+		 * FACTURA_PRODUCTO
+		 * daof.agregarFacturaProducto(1, 1, 4); 
+		 * daof.obtenerFacturaProductos()
+		 * 
+		 * 
+		 * TEST DE INTEGRACION
+		 * Cliente c = new Cliente(1, "Belen", "belenenemar@gmail.com");
+		 * Producto p = new Producto(1, "cubierto", (float) 12.5);
+		 * Factura f = new Factura(1, 1);
+		 * Cliente c2 = new Cliente(2, "Mateo", "mateo@gmail.com");
+		 * Producto p2 = new Producto(2, "plato", (float) 22.5);
+		 * Factura f2 = new Factura(2, 2);
+		 * 
+		 * daof.agregarFacturaProducto(1, 1, 4);
+		 * daof.obtenerProductoMejorRecaudacion();
+		 * daof.agregarFacturaProducto(1, 2, 5);
+		 * daof.obtenerProductoMejorRecaudacion();
 		 * ***/
 	}
 }

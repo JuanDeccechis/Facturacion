@@ -127,4 +127,35 @@ private String delimitador = "_";
 			this.agregarFacturaProducto(Integer.parseInt(row.get("idFactura")), Integer.parseInt(row.get("idProducto")), Integer.parseInt(row.get("cantidad")));;	
 		}
 	}
+	
+	/*** QUERIES ***/
+	public void obtenerFacturaProductos() throws SQLException {
+		String select = "SELECT * FROM factura_producto" + delimitador + sufijo;
+		PreparedStatement ps = this.conn.prepareStatement(select);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			System.out.println(rs.getInt("idFactura"));
+			System.out.println(rs.getInt("idProducto"));
+			System.out.println(rs.getInt("cantidad"));
+		}
+		rs.close();
+	}
+	
+	public void obtenerProductoMejorRecaudacion() throws SQLException {
+		String PRODUCTO_MEJOR_RECAUDACION ="SELECT fp.idproducto, p.nombre, (SUM(fp.cantidad * p.valor)) AS totalFacturado " + 
+			"		FROM factura_producto" + delimitador + sufijo +  " fp " +
+			"		INNER JOIN producto" + delimitador + sufijo +  " p " + 
+			"		ON fp.idproducto = p.id" + 
+			"		GROUP BY fp.idproducto " + 
+			"		ORDER BY totalFacturado DESC LIMIT 1;";
+	
+		PreparedStatement ps =this.conn.prepareStatement(PRODUCTO_MEJOR_RECAUDACION);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			System.out.println(rs.getInt("idproducto"));
+			System.out.println(rs.getString("nombre"));
+			System.out.println(rs.getInt("totalFacturado"));
+		}
+		rs.close();
+	}
 }

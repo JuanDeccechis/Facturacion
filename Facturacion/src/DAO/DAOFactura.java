@@ -15,4 +15,9 @@ public interface DAOFactura {
 	public List<Factura> listarFacturas() throws SQLException;
 	public Factura obtenerFactura(int id) throws SQLException;
 	public void cargarDesdeCsv() throws SQLException, FileNotFoundException, IOException;
+	public void agregarFacturaProducto(int i, int j, int k) throws SQLException;
+	public void obtenerFacturaProductos() throws SQLException;
+
+	/** QUERIES **/
+	public void obtenerProductoMejorRecaudacion() throws SQLException;
 }
